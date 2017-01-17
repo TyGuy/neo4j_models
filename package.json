@@ -1,0 +1,18 @@
+{
+  "name": "neo4j_models",
+  "version": "1.0.0",
+  "description": "models for Neo4j",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tyler Davis",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-env": "^1.1.8",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2"
+  }
+}
