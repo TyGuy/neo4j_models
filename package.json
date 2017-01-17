@@ -2,18 +2,25 @@
   "name": "neo4j_models",
   "version": "1.0.0",
   "description": "models for Neo4j",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "start": "node index.js",
-    "build": "gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon lib/index.js --exec babel-node",
+    "build": "babel lib -d dist",
+    "serve": "node dist/index.js",
+    "test": "mocha --compilers js:babel-register"
   },
   "author": "Tyler Davis",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-env": "^1.1.8",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2"
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "neo4j": "^2.0.0-RC2"
   }
 }
