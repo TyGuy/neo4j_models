@@ -1,7 +1,9 @@
-export default class Butt extends Object {
-  constructor: =>(buttType) {
-    this.buttType = buttType;
-  },
+export default class Butt {
+  constructor(buttType) {
+    this.buttType = buttType
+  }
 
-  poop: => { console.log('I am a ' + this.type + '-ass.')}
+  poop() {
+    console.log('I am a ' + this.buttType + '-ass.')
+  }
 }
