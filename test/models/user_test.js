@@ -90,11 +90,16 @@ describe('User', () => {
     })
 
     describe('.create', () => {
-      describe('when creating a user with valid props', () => {
-        let username = '2chainz'
-        let props = { username: username }
+      let baseProps = {
+        username: username,
+        first_name: 'Tity-O',
+        last_name: 'Boi'
+      }
 
+      describe('when creating a user with valid props', () => {
         it('creates a user', (done) => {
+          let props = Object.assign({}, baseProps)
+
           User.create(props).then((user) => {
             expect(user).to.be.an.instanceof(User)
             expect(user.username).to.eq(username)
@@ -105,10 +110,9 @@ describe('User', () => {
       })
 
       describe('when creating a user with invalid props', () => {
-        let username = '2shrt'
-        let props = { username: username }
-
         it('does not create a user, and rejects', (done) => {
+          let props = Object.assign({}, baseProps, { username: '2shrt' })
+
           User.create(props).then((user) => {
             // nothing
           }).catch((err) => {
