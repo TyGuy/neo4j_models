@@ -47,23 +47,47 @@ const clearDB = (username, callback) => {
 describe('User', () => {
   const username = 'tity_boi'
 
-  beforeEach((done) => {
-    clearDB(username, done)
-  })
+  // TODO: this should be called before every test
+  beforeEach((done) => { clearDB(username, done) })
 
-  describe('#get', () => {
-    describe('when the user exists', () => {
-      beforeEach((done) => {
-        createUser(username, done)
+  describe('static methods', () => {
+    describe('.get', () => {
+      describe('when the user exists', () => {
+        beforeEach((done) => { createUser(username, done) })
+
+        it('returns the user', (done) => {
+          User.get(username, (err, user) => {
+            expect(err).to.not.exist
+            expect(user).to.be.a('Object')
+            done()
+          })
+        })
       })
 
-      it('returns the user when it is found', (done) => {
-        User.get(username, (err, user) => {
-          expect(err).to.not.exist
-          expect(user).to.be.a('Object')
+      describe('when the user does not exist', () => {
+        it('returns an error', (done) => {
+          User.get(username, (err, user) => {
+            expect(err).to.be.a('Error')
+            expect(err).to.match(/No such user/)
+            done()
+          })
+        })
+      })
+    })
+
+    describe('.count', () => {
+      beforeEach((done) => {
+        createUser('thing1', (err, results) => {
+          createUser('thing2', done)
+        })
+      })
+
+      it('counts the user records', (done) => {
+        User.count((err, count) => {
+          expect(count).to.equal(2)
           done()
         })
-      });
+      })
     })
   })
 });
