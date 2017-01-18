@@ -55,20 +55,20 @@ describe('User', () => {
       describe('when the user exists', () => {
         beforeEach((done) => { createUser(username, done) })
 
-        it('returns the user', (done) => {
-          User.get(username, (err, user) => {
-            expect(err).to.not.exist
+        it('returns a Promise that resolves with the user', (done) => {
+          User.get(username).then((user) => {
             expect(user).to.be.a('Object')
+            expect(user.username).to.eq(username)
             done()
           })
         })
       })
 
       describe('when the user does not exist', () => {
-        it('returns an error', (done) => {
-          User.get(username, (err, user) => {
-            expect(err).to.be.a('Error')
-            expect(err).to.match(/No such user/)
+        it('returns a Promise that rejects with an error', (done) => {
+          User.get(username).then((user) => {}, (error) => {
+            expect(error).to.be.a('Error')
+            expect(error).to.match(/No such user/)
             done()
           })
         })
@@ -83,7 +83,7 @@ describe('User', () => {
       })
 
       it('counts the user records', (done) => {
-        User.count((err, count) => {
+        User.count().then((count) => {
           expect(count).to.equal(2)
           done()
         })
