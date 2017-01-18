@@ -2,6 +2,7 @@ import Dotenv from 'dotenv'
 import User from '../../lib/models/user'
 import Chai, { expect } from 'chai'
 import NeoDB from '../../lib/neo_db'
+import errors from '../../lib/models/errors'
 
 // WARNING NOTE:
 // The test env uses the same instance of the Neo4j database (because
@@ -47,7 +48,6 @@ const clearDB = (username, callback) => {
 describe('User', () => {
   const username = 'tity_boi'
 
-  // TODO: this should be called before every test
   beforeEach((done) => { clearDB(username, done) })
 
   describe('static methods', () => {
@@ -57,7 +57,7 @@ describe('User', () => {
 
         it('returns a Promise that resolves with the user', (done) => {
           User.get(username).then((user) => {
-            expect(user).to.be.a('Object')
+            expect(user).to.be.an.instanceof(User)
             expect(user.username).to.eq(username)
             done()
           })
@@ -86,6 +86,35 @@ describe('User', () => {
         User.count().then((count) => {
           expect(count).to.equal(2)
           done()
+        })
+      })
+    })
+
+    describe('.create', () => {
+      describe('when creating a user with valid props', () => {
+        let username = '2chainz'
+        let props = { username: username }
+
+        it('creates a user', (done) => {
+          User.create(props).then((user) => {
+            expect(user).to.be.an.instanceof(User)
+            expect(user.username).to.eq(username)
+            expect(user._id).to.exist
+            done()
+          })
+        })
+      })
+
+      describe('when creating a user with invalid props', () => {
+        let username = '2shrt'
+        let props = { username: username }
+
+        it('does not create a user, and rejects', (done) => {
+          User.create(props).then((user) => {}, (err) => {
+            expect(err).to.be.an.instanceof(Error)
+            expect(err.name).to.equal('ValidationError')
+            done()
+          })
         })
       })
     })
