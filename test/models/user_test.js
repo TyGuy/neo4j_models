@@ -2,7 +2,6 @@ import Dotenv from 'dotenv'
 import User from '../../lib/models/user'
 import Chai, { expect } from 'chai'
 import NeoDB from '../../lib/neo_db'
-import errors from '../../lib/models/errors'
 
 // WARNING NOTE:
 // The test env uses the same instance of the Neo4j database (because
@@ -66,7 +65,7 @@ describe('User', () => {
 
       describe('when the user does not exist', () => {
         it('returns a Promise that rejects with an error', (done) => {
-          User.get(username).then((user) => {}, (error) => {
+          User.get(username).then((user) => {}).catch((error) => {
             expect(error).to.be.a('Error')
             expect(error).to.match(/No such user/)
             done()
@@ -110,9 +109,11 @@ describe('User', () => {
         let props = { username: username }
 
         it('does not create a user, and rejects', (done) => {
-          User.create(props).then((user) => {}, (err) => {
-            expect(err).to.be.an.instanceof(Error)
-            expect(err.name).to.equal('ValidationError')
+          User.create(props).then((user) => {
+            // nothing
+          }).catch((err) => {
+            expect(err).to.contain.all.keys(['username'])
+            expect(err.username).to.match(/too short/)
             done()
           })
         })
