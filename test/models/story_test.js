@@ -1,20 +1,7 @@
-import Dotenv from 'dotenv'
 import Story from '../../lib/models/story'
 import Chai, { expect } from 'chai'
 import NeoDB from '../../lib/neo_db'
-
-const clearDB = (callback) => {
-  NeoDB.cypher({
-    query: 'MATCH (n) DETACH DELETE n',
-    params: {}
-  }, (err, results) => {
-    if (err) {
-      console.log(err)
-      return callback(err)
-    }
-    callback(null, results)
-  })
-}
+import clearDB from '../helpers/clear_db'
 
 describe('Story', () => {
   const title = 'The Width of The World'
@@ -31,9 +18,6 @@ describe('Story', () => {
     let storyProps = Object.assign({}, defaultProps, props)
     Story.create(storyProps).then((_result) => {
       callback()
-    }).catch((err) => {
-      console.log(err)
-      console.log("SHIT")
     })
   }
 
@@ -57,7 +41,7 @@ describe('Story', () => {
         it('returns a Promise that rejects with an error', (done) => {
           Story.get(title).then((story) => {}).catch((error) => {
             expect(error).to.be.a('Error')
-            expect(error).to.match(/No such story/)
+            expect(error).to.match(/No such story/i)
             done()
           })
         })

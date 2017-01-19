@@ -2,6 +2,7 @@ import Dotenv from 'dotenv'
 import User from '../../lib/models/user'
 import Chai, { expect } from 'chai'
 import NeoDB from '../../lib/neo_db'
+import clearDB from '../helpers/clear_db'
 
 // WARNING NOTE:
 // The test env uses the same instance of the Neo4j database (because
@@ -31,23 +32,10 @@ const destroyUser = (username, callback) => {
   }, callback)
 }
 
-const clearDB = (username, callback) => {
-  NeoDB.cypher({
-    query: 'MATCH (n) DETACH DELETE n',
-    params: {}
-  }, (err, results) => {
-    if (err) {
-      console.log(err)
-      return callback(err)
-    }
-    callback(null, results)
-  })
-}
-
 describe('User', () => {
   const username = 'tity_boi'
 
-  beforeEach((done) => { clearDB(username, done) })
+  beforeEach((done) => { clearDB(done) })
 
   describe('static methods', () => {
     describe('.get', () => {
@@ -67,7 +55,7 @@ describe('User', () => {
         it('returns a Promise that rejects with an error', (done) => {
           User.get(username).then((user) => {}).catch((error) => {
             expect(error).to.be.a('Error')
-            expect(error).to.match(/No such user/)
+            expect(error).to.match(/No such user/i)
             done()
           })
         })
